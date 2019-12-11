@@ -1,0 +1,352 @@
+{
+    "ApplicationName": "InsurancePaymentSystem",
+    "DisplayName": "Insurance Payment System",
+    "Description": "Application to automate insurance payment to farmers incase of weather changes.",
+    "ApplicationRoles": [
+      {
+        "Name": "Farmer",
+        "Description": "Party who has an active insurance plan and a valid farm land"
+      },
+      {
+        "Name": "InsuranceProvider",
+        "Description": "Party who gives out the insured amount."
+      },
+      {
+        "Name": "WeatherApi",
+        "Description": "A device to track weather conditions."
+      },
+      {
+          "Name": "Owner",
+          "Description":"The person who initiates the entire process"
+      }
+    ],
+    "Workflows":[
+        {
+            "Name": "InsurancePaymentSystem",
+            "DisplayName": "Insurance Payment",
+            "Description": "Main workflow to track end-to-end payment of insurance.",
+            "Initiators": [ "Owner" ],
+            "StartState":"InsuranceOpted",
+            "Properties": [
+                {
+                    "Name": "State",
+                    "DisplayName": "State",
+                    "Description": "Holds the state of the contract",
+                    "Type": {
+                        "Name": "state"
+                    }
+                },
+                {
+                    "Name": "Owner",
+                    "DisplayName": "Owner",
+                    "Description": "The owner of the end-to-end payment.",
+                    "Type": {
+                      "Name": "Owner"
+                    }
+                },
+                {
+                    "Name": "_Farmer",
+                    "DisplayName":"Farmer",
+                    "Description": "Farmer who has an active insurance plan and a valid farm land",
+                    "Type": {
+                      "Name": "Farmer"
+                    }
+                },
+                {
+                    "Name": "_InsStartDate",
+                    "DisplayName":"Insurance Start Date",
+                    "Description": "Start date of Insurance Plan",
+                    "Type": {
+                      "Name": "string"
+                    }
+                },
+                {
+                    "Name": "_InsEndDate",
+                    "DisplayName":"Insurance End Date",
+                    "Description": "End date of Insurance Plan",
+                    "Type": {
+                      "Name": "string"
+                    }
+                },
+                {
+                    "Name": "_premiumPercent",
+                    "DisplayName":"Premium Percentage",
+                    "Description": "Premium Percentage of Insurance Plan",
+                    "Type": {
+                      "Name": "int"
+                    }
+                },
+                {
+                    "Name": "_insuredAmt",
+                    "DisplayName":"Insured Amount",
+                    "Description": "Amount Insured by the Insurance Plan",
+                    "Type": {
+                      "Name": "int"
+                    }
+                },
+                {
+                    "Name": "_insPlanNo",
+                    "DisplayName":"Insurance Plan Number",
+                    "Description": "Unique Plan Number",
+                    "Type": {
+                      "Name": "string"
+                    }
+                },
+                {
+                    "Name": "_farmName",
+                    "DisplayName":"Farm Name",
+                    "Description": "Name of the Farm for which Insurance has been taken",
+                    "Type": {
+                      "Name": "string"
+                    }
+                },
+                {
+                    "Name": "_farmId",
+                    "DisplayName":"Farm Id",
+                    "Description": "Id of the Farm for which Insurance has been taken",
+                    "Type": {
+                      "Name": "string"
+                    }
+                },
+                {
+                    "Name": "_cultStartDate",
+                    "DisplayName":"Cultivation Start Date",
+                    "Description": "Cultivation Start Date",
+                    "Type": {
+                      "Name": "string"
+                    }
+                },
+                {
+                    "Name": "_cultEndDate",
+                    "DisplayName":"Cultivation End Date",
+                    "Description": "Cultivation End Date",
+                    "Type": {
+                      "Name": "string"
+                    }
+                },
+                {
+                    "Name": "_farmCoords",
+                    "DisplayName":"Farm Coordinates",
+                    "Description": "Geographical coordinates of the bounding polygon of the farm land",
+                    "Type": {
+                        "Name": "array",
+                        "ElementType": {
+                            "Name": "int"
+                        }
+                      }
+                },
+                {
+                    "Name": "_minPrecipitationRate",
+                    "DisplayName": "Minimum Precipitation Rate",
+                    "Description": "Minimum Precipitation Rate",
+                    "Type": {
+                      "Name": "int"
+                    }
+                },
+                {
+                    "Name": "_maxPrecipitationRate",
+                    "DisplayName": "Maximum Precipitation Rate",
+                    "Description": "Maximum Precipitation Rate",
+                    "Type": {
+                      "Name": "int"
+                    }
+                },
+                {
+                    "Name": "_currPrecipitationRate",
+                    "DisplayName": "Current Precipitation Rate",
+                    "Description": "Current Precipitation Rate",
+                    "Type": {
+                      "Name": "int"
+                    }
+                },
+                {
+                    "Name": "_amountPaidOut",
+                    "DisplayName": "Amount Paid out to the farmer",
+                    "Description": "Amount Paid out to the farmer",
+                    "Type": {
+                      "Name": "int"
+                    }
+                }
+            ],
+            "Constructor":{
+                "Parameters":[
+                    {
+                        "Name": "owner",
+                        "DisplayName":"Owner",
+                        "Description": "The person who initiates the entire process",
+                        "Type": {
+                          "Name": "Owner"
+                        }
+                    },
+                    {
+                        "Name": "Farmer",
+                        "DisplayName":"Farmer",
+                        "Description": "Farmer who has an active insurance plan and a valid farm land",
+                        "Type": {
+                          "Name": "Farmer"
+                        }
+                    },
+                    {
+                        "Name": "premiumPercent",
+                        "DisplayName":"Premium Percentage",
+                        "Description": "Premium Percentage of Insurance Plan",
+                        "Type": {
+                          "Name": "int"
+                        }
+                    },
+                    {
+                        "Name": "insuredAmt",
+                        "DisplayName":"Insured Amount",
+                        "Description": "Amount Insured by the Insurance Plan",
+                        "Type": {
+                          "Name": "int"
+                        }
+                    },
+                    {
+                        "Name": "insPlanNo",
+                        "DisplayName":"Insurance Plan Number",
+                        "Description": "Unique Plan Number",
+                        "Type": {
+                          "Name": "string"
+                        }
+                    },
+                    {
+                        "Name": "farmName",
+                        "DisplayName":"Farm Name",
+                        "Description": "Name of the Farm for which Insurance has been taken",
+                        "Type": {
+                          "Name": "string"
+                        }
+                    },
+                    {
+                        "Name": "farmId",
+                        "DisplayName":"Farm Id",
+                        "Description": "Id of the Farm for which Insurance has been taken",
+                        "Type": {
+                          "Name": "string"
+                        }
+                    },
+                    {
+                        "Name": "minPrecipitationRate",
+                        "DisplayName": "Minimum Precipitation Rate",
+                        "Description": "Minimum Precipitation Rate",
+                        "Type": {
+                          "Name": "int"
+                        }
+                    },
+                    {
+                        "Name": "maxPrecipitationRate",
+                        "DisplayName": "Maximum Precipitation Rate",
+                        "Description": "Maximum Precipitation Rate",
+                        "Type": {
+                          "Name": "int"
+                        }
+                    }
+                ]
+            },
+            "Functions":[
+                {
+                    "Name": "TriggerPayout",
+                    "DisplayName": "Trigger Payout",
+                    "Description": "Trigger Payout",
+                    "Parameters": [
+                        {
+                            "Name": "precipitationRate",
+                            "DisplayName":"Precipitation Rate",
+                            "Description": "Precipitation Rate",
+                            "Type": {
+                              "Name": "int"
+                            }
+                        }
+                    ]
+                  },
+                  {
+                    "Name": "CheckClaimValidity",
+                    "DisplayName": "Check Claim Validity",
+                    "Description": "Check Claim Validity",
+                    "Parameters": []
+                  },
+                  {
+                    "Name": "CalculateAmount",
+                    "DisplayName": "Calculate Amount",
+                    "Description": "Calculate Amount",
+                    "Parameters": []
+                  }
+            ],
+            "States":[
+                {
+                    "Name":"InsuranceOpted",
+                    "DisplayName": "InsuranceOpted",
+                    "Description": "Insurance Opted",
+                    "PercentComplete": 20,
+                    "Value": 0,
+                    "Style": "Success",
+                    "Transitions": [
+                        {
+                            "AllowedRoles": ["Owner"],
+                            "AllowedInstanceRoles": [ "Owner" ],
+                            "Description": "...",
+                            "Function": "TriggerPayout",
+                            "NextStates": [ "PayoutTriggered" ],
+                            "DisplayName": "Trigger Payout"
+                        }
+                    ]
+                },
+                {
+                    "Name": "PayoutTriggered",
+                    "DisplayName": "Payout Triggered",
+                    "Description": "Payout Triggered",
+                    "PercentComplete": 50,
+                    "Value": 1,
+                    "Style": "Success",
+                    "Transitions": [
+                        {
+                            "AllowedRoles": ["Owner"],
+                            "AllowedInstanceRoles": [ "Owner" ],
+                            "Description": "...",
+                            "Function": "CheckClaimValidity",
+                            "NextStates": [ "ValidClaim","InvalidClaim" ],
+                            "DisplayName": "Check Claim Validity"
+                        }
+                    ]
+                },
+                {
+                    "Name": "ValidClaim",
+                    "DisplayName": "ValidClaim",
+                    "Description": "Valid Claim",
+                    "PercentComplete": 80,
+                    "Value": 2,
+                    "Style": "Success",
+                    "Transitions": [
+                        {
+                            "AllowedRoles": ["Owner"],
+                            "AllowedInstanceRoles": [ "Owner" ],
+                            "Description": "...",
+                            "Function": "CalculateAmount",
+                            "NextStates": [ "PaymentComplete"],
+                            "DisplayName": "Calculate Amount"
+                        }
+                    ]
+                },
+                {
+                    "Name": "PaymentComplete",
+                    "DisplayName": "Payment Complete",
+                    "Description": "Payment Complete",
+                    "PercentComplete": 100,
+                    "Value": 3,
+                    "Style": "Success",
+                    "Transitions": []
+                },
+                {
+                    "Name": "InvalidClaim",
+                    "DisplayName": "Invalid Claim",
+                    "Description": "Invalid Claim",
+                    "PercentComplete": 100,
+                    "Value": 4,
+                    "Style": "Failure",
+                    "Transitions": []
+                  }
+            ]
+        }
+    ]    
+}
