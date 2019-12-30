@@ -3,34 +3,30 @@ pragma solidity >=0.4.25 <0.6.0;
 contract InsurancePaymentSystem
 {
     //Set of States
-    enum StateType { InsuranceOpted, PayoutTriggered, ValidClaim, PaymentComplete, InvalidClaim}
+    enum StateType { InsuranceOpted, PaymentComplete, PlanExpired}
     StateType public  State;
     address public Owner;
     address public _Farmer;
     int public  param1;
     int public  param2;
-    string public _InsStartDate; //Need to check type for date fields
-    string public _InsEndDate;
     int public _premiumPercent;
     int public _insuredAmt;
     string public _insPlanNo;
-    string public _farmName;
     string public _farmId;
-    string public _cultStartDate;
-    string public _cultEndDate;
-    int[] public _farmCoords; //Need to check
     int public _minPrecipitationRate;
     int public _maxPrecipitationRate;
     int public _amountPaidOut;
     int public _currPrecipitationRate;
+    string public _cropName;
+    //enum CropNameEnum {Rice, Cotton, Wheat, Tea} CropNameEnum public CropName;
 
     constructor (address owner,
     address Farmer,
     int premiumPercent,
     int insuredAmt,
     string memory insPlanNo,
-    string memory farmName,
     string memory farmId,
+    string memory cropName,
     int minPrecipitationRate,
     int maxPrecipitationRate
  ) public {
@@ -40,29 +36,23 @@ contract InsurancePaymentSystem
        _premiumPercent = premiumPercent;
        _insuredAmt = insuredAmt;
        _insPlanNo = insPlanNo;
-       _farmName = farmName;
        _farmId = farmId;
        _minPrecipitationRate = minPrecipitationRate;
        _maxPrecipitationRate = maxPrecipitationRate;
+       _cropName = cropName;
     }
-    function TriggerPayout(int precipitationRate) public {
-        _currPrecipitationRate = precipitationRate;
-        State = StateType.PayoutTriggered;
-    }
-    function CheckClaimValidity() public {
-        if(_currPrecipitationRate >= _minPrecipitationRate || _currPrecipitationRate <= _maxPrecipitationRate) {
-            State = StateType.InvalidClaim;
-            revert("Invalid Claim");
+
+    function CalculateAmount(int weatherCondition, bool expired) public {
+        if(expired) {
+            State = StateType.PlanExpired;
+            return;
         }
-        else {
-            State = StateType.ValidClaim;
+        if(weatherCondition == 0){
+                _amountPaidOut = _insuredAmt/2;
         }
-    }
-    function CalculateAmount() public {
-        _amountPaidOut = _insuredAmt * 8 / 100;
+        else{
+            _amountPaidOut = _insuredAmt;
+        }
         State = StateType.PaymentComplete;
     }
-    function Get_farmCoords() public view returns (int[] memory) {
-     return _farmCoords;
-}
 }

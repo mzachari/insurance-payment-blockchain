@@ -46,26 +46,10 @@
                 },
                 {
                     "Name": "_Farmer",
-                    "DisplayName":"Farmer",
+                    "DisplayName":"Farmer Id",
                     "Description": "Farmer who has an active insurance plan and a valid farm land",
                     "Type": {
                       "Name": "Farmer"
-                    }
-                },
-                {
-                    "Name": "_InsStartDate",
-                    "DisplayName":"Insurance Start Date",
-                    "Description": "Start date of Insurance Plan",
-                    "Type": {
-                      "Name": "string"
-                    }
-                },
-                {
-                    "Name": "_InsEndDate",
-                    "DisplayName":"Insurance End Date",
-                    "Description": "End date of Insurance Plan",
-                    "Type": {
-                      "Name": "string"
                     }
                 },
                 {
@@ -93,47 +77,12 @@
                     }
                 },
                 {
-                    "Name": "_farmName",
-                    "DisplayName":"Farm Name",
-                    "Description": "Name of the Farm for which Insurance has been taken",
-                    "Type": {
-                      "Name": "string"
-                    }
-                },
-                {
                     "Name": "_farmId",
                     "DisplayName":"Farm Id",
                     "Description": "Id of the Farm for which Insurance has been taken",
                     "Type": {
                       "Name": "string"
                     }
-                },
-                {
-                    "Name": "_cultStartDate",
-                    "DisplayName":"Cultivation Start Date",
-                    "Description": "Cultivation Start Date",
-                    "Type": {
-                      "Name": "string"
-                    }
-                },
-                {
-                    "Name": "_cultEndDate",
-                    "DisplayName":"Cultivation End Date",
-                    "Description": "Cultivation End Date",
-                    "Type": {
-                      "Name": "string"
-                    }
-                },
-                {
-                    "Name": "_farmCoords",
-                    "DisplayName":"Farm Coordinates",
-                    "Description": "Geographical coordinates of the bounding polygon of the farm land",
-                    "Type": {
-                        "Name": "array",
-                        "ElementType": {
-                            "Name": "int"
-                        }
-                      }
                 },
                 {
                     "Name": "_minPrecipitationRate",
@@ -166,6 +115,14 @@
                     "Type": {
                       "Name": "int"
                     }
+                },
+                {
+                  "Name": "_cropName",
+                  "DisplayName":"Crop",
+                  "Description": "Crop Name",
+                  "Type": {
+                    "Name": "string"
+                  }
                 }
             ],
             "Constructor":{
@@ -211,20 +168,20 @@
                         }
                     },
                     {
-                        "Name": "farmName",
-                        "DisplayName":"Farm Name",
-                        "Description": "Name of the Farm for which Insurance has been taken",
-                        "Type": {
-                          "Name": "string"
-                        }
-                    },
-                    {
                         "Name": "farmId",
                         "DisplayName":"Farm Id",
                         "Description": "Id of the Farm for which Insurance has been taken",
                         "Type": {
                           "Name": "string"
                         }
+                    },
+                    {
+                      "Name": "cropName",
+                      "DisplayName":"Crop",
+                      "Description": "Crop Name",
+                      "Type": {
+                        "Name": "string"
+                      }
                     },
                     {
                         "Name": "minPrecipitationRate",
@@ -245,32 +202,29 @@
                 ]
             },
             "Functions":[
-                {
-                    "Name": "TriggerPayout",
-                    "DisplayName": "Trigger Payout",
-                    "Description": "Trigger Payout",
-                    "Parameters": [
-                        {
-                            "Name": "precipitationRate",
-                            "DisplayName":"Precipitation Rate",
-                            "Description": "Precipitation Rate",
-                            "Type": {
-                              "Name": "int"
-                            }
-                        }
-                    ]
-                  },
-                  {
-                    "Name": "CheckClaimValidity",
-                    "DisplayName": "Check Claim Validity",
-                    "Description": "Check Claim Validity",
-                    "Parameters": []
-                  },
                   {
                     "Name": "CalculateAmount",
                     "DisplayName": "Calculate Amount",
                     "Description": "Calculate Amount",
-                    "Parameters": []
+                    "Parameters": [
+                      {
+                        "Name": "weatherCondition",
+                        "DisplayName":"Weather Condition",
+                        "Description": "Weather Condition",
+                        "Type": {
+                          "Name": "int"
+                        }
+                      },
+                      {
+                        "Name": "expired",
+                        "DisplayName":"Plan Expired",
+                        "Description": "Plan Expired",
+                        "Type": {
+                          "Name": "bool"
+                        }
+                      }
+                     
+                    ]
                   }
             ],
             "States":[
@@ -278,55 +232,19 @@
                     "Name":"InsuranceOpted",
                     "DisplayName": "InsuranceOpted",
                     "Description": "Insurance Opted",
-                    "PercentComplete": 20,
+                    "PercentComplete": 50,
                     "Value": 0,
                     "Style": "Success",
                     "Transitions": [
-                        {
-                            "AllowedRoles": ["Owner"],
-                            "AllowedInstanceRoles": [ "Owner" ],
-                            "Description": "...",
-                            "Function": "TriggerPayout",
-                            "NextStates": [ "PayoutTriggered" ],
-                            "DisplayName": "Trigger Payout"
-                        }
-                    ]
-                },
-                {
-                    "Name": "PayoutTriggered",
-                    "DisplayName": "Payout Triggered",
-                    "Description": "Payout Triggered",
-                    "PercentComplete": 50,
-                    "Value": 1,
-                    "Style": "Success",
-                    "Transitions": [
-                        {
-                            "AllowedRoles": ["Owner"],
-                            "AllowedInstanceRoles": [ "Owner" ],
-                            "Description": "...",
-                            "Function": "CheckClaimValidity",
-                            "NextStates": [ "ValidClaim","InvalidClaim" ],
-                            "DisplayName": "Check Claim Validity"
-                        }
-                    ]
-                },
-                {
-                    "Name": "ValidClaim",
-                    "DisplayName": "ValidClaim",
-                    "Description": "Valid Claim",
-                    "PercentComplete": 80,
-                    "Value": 2,
-                    "Style": "Success",
-                    "Transitions": [
-                        {
-                            "AllowedRoles": ["Owner"],
-                            "AllowedInstanceRoles": [ "Owner" ],
-                            "Description": "...",
-                            "Function": "CalculateAmount",
-                            "NextStates": [ "PaymentComplete"],
-                            "DisplayName": "Calculate Amount"
-                        }
-                    ]
+                      {
+                          "AllowedRoles": ["Owner"],
+                          "AllowedInstanceRoles": [ "Owner" ],
+                          "Description": "...",
+                          "Function": "CalculateAmount",
+                          "NextStates": [ "PaymentComplete","PlanExpired"],
+                          "DisplayName": "Calculate Amount"
+                      }
+                  ]
                 },
                 {
                     "Name": "PaymentComplete",
@@ -338,14 +256,14 @@
                     "Transitions": []
                 },
                 {
-                    "Name": "InvalidClaim",
-                    "DisplayName": "Invalid Claim",
-                    "Description": "Invalid Claim",
-                    "PercentComplete": 100,
-                    "Value": 4,
-                    "Style": "Failure",
-                    "Transitions": []
-                  }
+                  "Name": "PlanExpired",
+                  "DisplayName": "Plan Expired",
+                  "Description": "Plan Expired",
+                  "PercentComplete": 100,
+                  "Value": 3,
+                  "Style": "Failure",
+                  "Transitions": []
+              }
             ]
         }
     ]    
